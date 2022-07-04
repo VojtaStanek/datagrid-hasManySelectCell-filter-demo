@@ -1,0 +1,165 @@
+{
+	"formatVersion": 3,
+	"modifications": [
+		{
+			"modification": "createEntity",
+			"entity": {
+				"name": "Article",
+				"primary": "id",
+				"primaryColumn": "id",
+				"unique": {},
+				"fields": {
+					"id": {
+						"name": "id",
+						"columnName": "id",
+						"nullable": false,
+						"type": "Uuid",
+						"columnType": "uuid"
+					}
+				},
+				"tableName": "article"
+			}
+		},
+		{
+			"modification": "createEntity",
+			"entity": {
+				"name": "Tag",
+				"primary": "id",
+				"primaryColumn": "id",
+				"unique": {},
+				"fields": {
+					"id": {
+						"name": "id",
+						"columnName": "id",
+						"nullable": false,
+						"type": "Uuid",
+						"columnType": "uuid"
+					}
+				},
+				"tableName": "tag"
+			}
+		},
+		{
+			"modification": "createColumn",
+			"entityName": "Article",
+			"field": {
+				"name": "title",
+				"columnName": "title",
+				"nullable": false,
+				"type": "String",
+				"columnType": "text"
+			}
+		},
+		{
+			"modification": "createColumn",
+			"entityName": "Tag",
+			"field": {
+				"name": "name",
+				"columnName": "name",
+				"nullable": false,
+				"type": "String",
+				"columnType": "text"
+			}
+		},
+		{
+			"modification": "createColumn",
+			"entityName": "Tag",
+			"field": {
+				"name": "show",
+				"columnName": "show",
+				"nullable": false,
+				"default": true,
+				"type": "Bool",
+				"columnType": "boolean"
+			},
+			"fillValue": true
+		},
+		{
+			"modification": "createRelation",
+			"entityName": "Article",
+			"owningSide": {
+				"type": "ManyHasMany",
+				"name": "tags",
+				"inversedBy": "articles",
+				"target": "Tag",
+				"joiningTable": {
+					"tableName": "article_tags",
+					"joiningColumn": {
+						"columnName": "article_id",
+						"onDelete": "cascade"
+					},
+					"inverseJoiningColumn": {
+						"columnName": "tag_id",
+						"onDelete": "cascade"
+					}
+				}
+			},
+			"inverseSide": {
+				"name": "articles",
+				"ownedBy": "tags",
+				"target": "Article",
+				"type": "ManyHasMany"
+			}
+		},
+		{
+			"modification": "patchAclSchema",
+			"patch": [
+				{
+					"op": "add",
+					"path": "/roles/admin",
+					"value": {
+						"variables": {},
+						"stages": "*",
+						"entities": {
+							"Article": {
+								"predicates": {},
+								"operations": {
+									"create": {
+										"id": true,
+										"title": true,
+										"tags": true
+									},
+									"read": {
+										"id": true,
+										"title": true,
+										"tags": true
+									},
+									"update": {
+										"id": true,
+										"title": true,
+										"tags": true
+									},
+									"delete": true
+								}
+							},
+							"Tag": {
+								"predicates": {},
+								"operations": {
+									"create": {
+										"id": true,
+										"name": true,
+										"show": true,
+										"articles": true
+									},
+									"read": {
+										"id": true,
+										"name": true,
+										"show": true,
+										"articles": true
+									},
+									"update": {
+										"id": true,
+										"name": true,
+										"show": true,
+										"articles": true
+									},
+									"delete": true
+								}
+							}
+						}
+					}
+				}
+			]
+		}
+	]
+}
